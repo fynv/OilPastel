@@ -27,7 +27,17 @@ public:
 	GLCanvas(QWidget* parent);
 	~GLCanvas();
 
+	int m_image_width = 1024;
+	int m_image_height = 768;
+
 	glm::vec3 m_light_dir = glm::vec3(0.5f, 0.5f, 1.0f);
+	
+	glm::vec4 stroke_color = glm::vec4(1.0f, 0.0f, 0.0f, 0.5f);
+	float stroke_radius = 20.0f;
+	float stroke_grain_size = 3.0f;
+	float stroke_roughness = 1.0f;
+	float stroke_hardness = 0.0f;
+
 
 protected:
 	virtual void initializeGL() override;
@@ -38,9 +48,6 @@ protected:
 
 private:
 	QOpenGLExtraFunctions m_gl;
-
-	int m_image_width = 1024;
-	int m_image_height = 768;
 
 	std::unique_ptr<Image> m_image;
 

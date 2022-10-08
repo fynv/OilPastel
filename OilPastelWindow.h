@@ -19,5 +19,16 @@ private slots:
 	void LightDirDown();
 	void LightDirLeft();
 	void LightDirRight();
+
+	void EditR();
+	void EditG();
+	void EditB();
+	void EditA();
+
+	void EditRadius();
+	void EditGrain();
+	void EditRough();
+	void EditHard();
+
 };
 

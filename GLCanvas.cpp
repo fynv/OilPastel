@@ -91,8 +91,8 @@ void GLCanvas::mousePressEvent(QMouseEvent* event)
 	m_tmp_image = std::unique_ptr<Image>(new Image(&m_gl, m_image_width, m_image_height));
 	m_tmp_image->create_textures();
 
-	m_stroke = std::unique_ptr<Stroke>(new Stroke(&m_gl, m_image_width, m_image_height, m_blur_row.get(), m_blur_col.get(), 3.0f, 1.0f, 3));
-	m_stroke->color = { 1.0f, 0.0f, 0.0f, 0.5f };
+	m_stroke = std::unique_ptr<Stroke>(new Stroke(&m_gl, m_image_width, m_image_height, m_blur_row.get(), m_blur_col.get(), stroke_grain_size, stroke_roughness, 3));
+	m_stroke->color = stroke_color;
 
 }
 
@@ -121,7 +121,7 @@ void GLCanvas::mouseMoveEvent(QMouseEvent* event)
 	m_stroke->bind_buffer();
 	m_gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	m_gl.glClear(GL_COLOR_BUFFER_BIT);
-	m_sdc->draw(m_image_width, m_image_height, 20.0, 0.0f, (int)m_points.size(), m_points.data());
+	m_sdc->draw(m_image_width, m_image_height, stroke_radius, stroke_hardness, (int)m_points.size(), m_points.data());
 	m_stroke->resolve_msaa();	
 	m_sb->Blend(*m_tmp_image, *m_stroke);
 
