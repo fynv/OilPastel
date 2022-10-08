@@ -98,7 +98,7 @@ add_definitions(${DEFINES})
 add_executable (OilPastel ${SOURCES} ${SOURCES_ROUTINES})
 
 if (WIN32)
-# set_property(TARGET OilPastel PROPERTY WIN32_EXECUTABLE true)
+set_property(TARGET OilPastel PROPERTY WIN32_EXECUTABLE true)
 endif()
 
 target_link_libraries(OilPastel ${LINK_LIBS})
