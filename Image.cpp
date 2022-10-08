@@ -11,7 +11,7 @@ Image::Image(QOpenGLExtraFunctions* gl, int width, int height)
 	, m_gl_norm(gl)
 {
 	memset(m_rgba.data(), 255, width * height * 4);
-	m_gl_norm.create(m_width, m_height);
+	m_gl_norm.create(m_width, m_height, false);
 
 	m_gl->glGenFramebuffers(1, &m_fbo);
 
@@ -21,6 +21,16 @@ Image::Image(QOpenGLExtraFunctions* gl, int width, int height)
 Image::~Image()
 {
 	m_gl->glDeleteFramebuffers(1, &m_fbo);
+}
+
+void Image::create_textures()
+{
+	m_gl_rgba.create(m_width, m_height, true);
+	m_gl_thickness.create(m_width, m_height);
+
+	m_gl->glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+	m_gl->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_gl_rgba.tex_id, 0);
+	m_gl->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_gl_thickness.tex_id, 0);
 }
 
 void Image::update_textures()

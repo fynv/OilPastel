@@ -7,7 +7,7 @@
 class DrawLighted
 {
 public:
-	DrawLighted(QOpenGLExtraFunctions* gl, bool flipY = false);
+	DrawLighted(QOpenGLExtraFunctions* gl);
 
 	void render(Image& image, int x, int y, int width, int height, const glm::vec3 light_dir);
 

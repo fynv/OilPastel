@@ -45,6 +45,7 @@ StrokeBlend::StrokeBlend(QOpenGLExtraFunctions* gl) : m_gl(gl)
 void StrokeBlend::Blend(Image& img, Stroke& stroke)
 {
 	m_gl->glBindFramebuffer(GL_FRAMEBUFFER, img.m_fbo);
+	m_gl->glEnable(GL_FRAMEBUFFER_SRGB);
 	
 	const GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 	m_gl->glDrawBuffers(2, drawBuffers);
@@ -69,8 +70,6 @@ void StrokeBlend::Blend(Image& img, Stroke& stroke)
 	m_gl->glDrawArrays(GL_TRIANGLES, 0, 3);
 	m_gl->glBindTexture(GL_TEXTURE_2D, 0);
 	m_gl->glUseProgram(0);
-
-	img.m_gl_rgba.genMIPs();
 
 }
 

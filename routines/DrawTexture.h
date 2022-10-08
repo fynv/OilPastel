@@ -6,7 +6,7 @@
 class DrawTexture
 {
 public:
-	DrawTexture(QOpenGLExtraFunctions* gl, bool premult = false, bool flipY = false);
+	DrawTexture(QOpenGLExtraFunctions* gl, bool premult = false);
 
 	void render(unsigned tex_id, int x, int y, int width, int height, bool blending = false);
 

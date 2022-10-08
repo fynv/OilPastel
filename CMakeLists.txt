@@ -56,6 +56,8 @@ routines/StrokeBlend.cpp
 routines/StrokeBlend.h
 routines/StrokeDrawCurve.cpp
 routines/StrokeDrawCurve.h
+routines/BlitImage.cpp
+routines/BlitImage.h
 )
 
 

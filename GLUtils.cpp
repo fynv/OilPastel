@@ -149,23 +149,14 @@ GL2DRGBA::~GL2DRGBA()
 	m_gl->glDeleteTextures(1, &tex_id);
 }
 
-void GL2DRGBA::genMIPs()
-{
-	m_gl->glBindTexture(GL_TEXTURE_2D, tex_id);
-	m_gl->glGenerateMipmap(GL_TEXTURE_2D);
-	m_gl->glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-
-void GL2DRGBA::create(int width, int height)
+void GL2DRGBA::create(int width, int height, bool srgb)
 {
 	m_gl->glBindTexture(GL_TEXTURE_2D, tex_id);
 	m_gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	m_gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);	
+	m_gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	m_gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	m_gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	m_gl->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-	m_gl->glGenerateMipmap(GL_TEXTURE_2D);
+	m_gl->glTexImage2D(GL_TEXTURE_2D, 0, srgb? GL_SRGB_ALPHA: GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	m_gl->glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -173,12 +164,11 @@ void GL2DRGBA::upload(int width, int height, const uint8_t* data)
 {
 	m_gl->glBindTexture(GL_TEXTURE_2D, tex_id);
 	m_gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	m_gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	m_gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	m_gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	m_gl->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);	
 	m_gl->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	m_gl->glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	m_gl->glGenerateMipmap(GL_TEXTURE_2D);
+	m_gl->glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);	
 	m_gl->glBindTexture(GL_TEXTURE_2D, 0);
 }
 

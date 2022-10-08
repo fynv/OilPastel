@@ -46,8 +46,7 @@ struct GL2DRGBA
 	GL2DRGBA(QOpenGLExtraFunctions* gl);
 	~GL2DRGBA();
 
-	void genMIPs();
-	void create(int width, int height);
+	void create(int width, int height, bool srgb);
 	void upload(int width, int height, const uint8_t* data);
 
 };

@@ -3,17 +3,18 @@
 #include <memory>
 #include "GLUtils.h"
 
-class DrawThickness
+#include "Image.h"
+
+class BlitImage
 {
 public:
-	DrawThickness(QOpenGLExtraFunctions* gl);
+	BlitImage(QOpenGLExtraFunctions* gl);
 
-	void render(unsigned tex_id, int x, int y, int width, int height);
+	void Copy(Image& img_out, Image& img_in);
 
 private:
 	QOpenGLExtraFunctions* m_gl;
 	std::unique_ptr<GLProgram> m_prog;
+
 };
-
-
 

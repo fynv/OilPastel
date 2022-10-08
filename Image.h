@@ -22,5 +22,6 @@ public:
 
 	unsigned m_fbo;
 
+	void create_textures();
 	void update_textures();	
 };

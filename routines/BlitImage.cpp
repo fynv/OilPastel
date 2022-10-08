@@ -1,6 +1,7 @@
 #include <QOpenGLExtraFunctions>
 #include <string>
-#include "DrawLighted.h"
+#include "BlitImage.h"
+
 
 static std::string g_vertex =
 R"(#version 430
@@ -19,49 +20,52 @@ static std::string g_frag =
 R"(#version 430
 layout (location = 0) in vec2 vUV;
 layout (location = 0) out vec4 outColor;
-layout (location = 0) uniform sampler2D uTexCol;
-layout (location = 1) uniform sampler2D uTexNorm;
-layout (location = 2) uniform vec3 uLightDir;
+layout (location = 1) out vec4 outThickness;
 
+layout (location = 0) uniform sampler2D uColor;
+layout (location = 1) uniform sampler2D uThickness;
 void main()
 {
-	vec3 col = texture(uTexCol, vUV).xyz;
-	vec3 norm = texture(uTexNorm, vUV).xyz;
-	norm = norm*2.0 - 1.0;	
-	float l = dot(norm, uLightDir);
-	if (l<0.0) l= 0.0;
-	outColor = vec4(col.xyz*l, 1.0);
+	outColor = texture(uColor, vUV);
+	float t = texture(uThickness, vUV).x;
+	outThickness = vec4(t,t,t,1.0);
 }
 )";
 
-DrawLighted::DrawLighted(QOpenGLExtraFunctions* gl) : m_gl(gl)
-{	
+
+BlitImage::BlitImage(QOpenGLExtraFunctions* gl) : m_gl(gl)
+{
 	GLShader vert_shader(m_gl, GL_VERTEX_SHADER, g_vertex.c_str());
 	GLShader frag_shader(m_gl, GL_FRAGMENT_SHADER, g_frag.c_str());
 	m_prog = (std::unique_ptr<GLProgram>)(new GLProgram(m_gl, vert_shader, frag_shader));
 }
 
-void DrawLighted::render(Image& image, int x, int y, int width, int height, const glm::vec3 light_dir)
+
+
+void BlitImage::Copy(Image& img_out, Image& img_in)
 {
-	m_gl->glViewport(x, y, width, height);
-	m_gl->glDisable(GL_DEPTH_TEST);
+	m_gl->glBindFramebuffer(GL_FRAMEBUFFER, img_out.m_fbo);
+	m_gl->glEnable(GL_FRAMEBUFFER_SRGB);
 
+	const GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	m_gl->glDrawBuffers(2, drawBuffers);
+
+	m_gl->glViewport(0, 0, img_out.m_width, img_out.m_height);
 	m_gl->glDisable(GL_BLEND);
-
+	
 	m_gl->glUseProgram(m_prog->m_id);
 
 	m_gl->glActiveTexture(GL_TEXTURE0);
-	m_gl->glBindTexture(GL_TEXTURE_2D, image.m_gl_rgba.tex_id);
+	m_gl->glBindTexture(GL_TEXTURE_2D, img_in.m_gl_rgba.tex_id);
 	m_gl->glUniform1i(0, 0);
 
 	m_gl->glActiveTexture(GL_TEXTURE1);
-	m_gl->glBindTexture(GL_TEXTURE_2D, image.m_gl_norm.tex_id);
+	m_gl->glBindTexture(GL_TEXTURE_2D, img_in.m_gl_thickness.tex_id);
 	m_gl->glUniform1i(1, 1);
-
-	glm::vec3 ldir = glm::normalize(light_dir);
-	m_gl->glUniform3fv(2, 1, (float*)&ldir);
 
 	m_gl->glDrawArrays(GL_TRIANGLES, 0, 3);
 	m_gl->glBindTexture(GL_TEXTURE_2D, 0);
 	m_gl->glUseProgram(0);
+
 }
+

@@ -4,6 +4,7 @@
 OilPastelWindow::OilPastelWindow()
 {
 	m_ui.setupUi(this);
+	m_ui.canvas->setFixedSize(1024, 768);
 	connect(m_ui.btnLightDirCenter, SIGNAL(clicked()), SLOT(LightDirCenter()));
 	connect(m_ui.btnLightDirUp, SIGNAL(clicked()), SLOT(LightDirUp()));
 	connect(m_ui.btnLightDirDown, SIGNAL(clicked()), SLOT(LightDirDown()));
