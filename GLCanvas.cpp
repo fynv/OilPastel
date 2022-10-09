@@ -21,7 +21,7 @@
 GLCanvas::GLCanvas(QWidget* parent)
 	: QOpenGLWidget(parent)
 {
-	
+	setTextureFormat(GL_SRGB8_ALPHA8);
 }
 
 GLCanvas::~GLCanvas()
